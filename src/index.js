@@ -25,17 +25,17 @@ class Board extends React.Component {
       <div>
         <div className="board-row">
           {this.renderSquare(0,0)}
-          {this.renderSquare(0,1)}
-          {this.renderSquare(0,2)}
-        </div>
-        <div className="board-row">
           {this.renderSquare(1,0)}
-          {this.renderSquare(1,1)}
-          {this.renderSquare(1,2)}
+          {this.renderSquare(2,0)}
         </div>
         <div className="board-row">
-          {this.renderSquare(2,0)}
+          {this.renderSquare(0,1)}
+          {this.renderSquare(1,1)}
           {this.renderSquare(2,1)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(0,2)}
+          {this.renderSquare(1,2)}
           {this.renderSquare(2,2)}
         </div>
       </div>
@@ -49,6 +49,8 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(3).fill(Array(3).fill(null)),
+        lastX: null,
+        lastY: null
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -64,16 +66,15 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[this.state.stepNumber];
     const squares = current.squares.slice().map(function(row){return row.slice();});
-    console.log(squares)
     if (calculateWinner(squares) || squares[x][y]){
       return;
     }
-    console.log(x)
-    console.log(y)
     squares[x][y] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       history: history.concat([{
         squares: squares,
+        lastX: x,
+        lastY: y,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -83,10 +84,9 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-
     const moves = history.map((step, move) => {
       const desc = move ? 
-        'Go to move #' + move : 
+        'Go to move #' + move + ' x: ' + history[move].lastX + ' y: ' + history[move].lastY  : 
         'Go to game start';
       return (
         <li key={move}>
