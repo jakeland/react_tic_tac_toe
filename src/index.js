@@ -79,6 +79,11 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
+    if (endGame(squares)){
+      console.log('game over')
+    }else{
+      console.log('woah')
+    }
   }
   render() {
     const history = this.state.history;
@@ -148,4 +153,16 @@ function calculateWinner(squares){
     }
   }
   return null;
+}
+
+function endGame(squares){
+  let x = JSON.stringify(squares);
+  let ind = "null";
+  console.log(x.indexOf(ind))
+  if(x.indexOf(ind) === -1){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
